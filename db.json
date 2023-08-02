@@ -5,8 +5,12 @@
       "text": "Create a Todo list app"
     },
     {
-      "id": 15,
-      "text": "Testing the app"
+      "id": 48,
+      "text": "Adding Features"
+    },
+    {
+      "id": 72,
+      "text": "Separating the Component"
     }
   ]
 }
