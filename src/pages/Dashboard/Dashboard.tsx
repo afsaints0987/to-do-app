@@ -9,43 +9,17 @@ const Dashboard: React.FC = () => {
     id: Math.floor(Math.random() * 1000),
     text: "",
   });
-  const [todos, setTodos] = React.useState<Todo[]>([]);
-  
-  let userData: { username: string; };
+  let userData: { username: string };
   const storedUser = localStorage.getItem("user");
   if (storedUser) {
     userData = JSON.parse(storedUser);
   }
 
-  const getTodoList = async () => {
-    const getTodo = await http.get(`/tasks`);
-    const todoItems = getTodo.data;
-    const filteredTodos = todoItems.filter((todo: { author: string; }) => todo.author === userData.username);
-    setTodos(filteredTodos)
-  };
-
-  React.useEffect(() => {
-    getTodoList();
-
-    return () => {
-      setTodos([]);
-    };
-  }, []);
-
-  const handleRefresh = React.useCallback(() => {
-    getTodoList();
-  }, []);
 
   const handleShowTodo = () => {
     setShowToDo(!showTodo);
   };
-  const handleShowComment = (id: number | undefined) => {
-    setTodos((prevTodos) =>
-      prevTodos.map((todo) =>
-        todo.id === id ? { ...todo, showComment: !todo.showComment } : todo
-      )
-    );
-  };
+
 
   const handleTodoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -65,12 +39,9 @@ const Dashboard: React.FC = () => {
       await http.post('tasks', addTodo)
     }
     setAddTodo({ text: "" });
-    handleRefresh();
   };
 
-  const handleDeleteTodo = (id: number | undefined) => {
-    console.log(id);
-  };
+  
 
   return (
     <div className="container">
@@ -99,11 +70,7 @@ const Dashboard: React.FC = () => {
           </button>
         </form>
       )}
-      <TodoList
-        todos={todos}
-        handleShowComment={handleShowComment}
-        handleDeleteTodo={handleDeleteTodo}
-      />
+      <TodoList/>
     </div>
   );
 };

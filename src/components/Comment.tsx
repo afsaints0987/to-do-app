@@ -12,23 +12,23 @@ const Comment: React.FC = () => {
         getComments();
     },[])
 
-    const handleCommentRefresh = React.useCallback(() => {
-        getComments();
-    },[])
-
-    handleCommentRefresh();
 
   return (
     <div>
-        {
-            comments.map((comment: {id: number; comment_body: string}) => (
-                <div key={comment.id} className="container px-3 py-2 mt-2 bg-secondary rounded-3">
-                    <p className="text-sm text-light">{comment.comment_body}</p>
-                </div>
-            ))
-        }
+      {comments.map((comment: { id: number; body: string }) => (
+        <div
+          key={comment.id}
+          className="container px-3 py-2 mt-2 mx-2 bg-dark rounded-3 shadow-sm"
+        >
+          <p className="text-sm text-light">{comment.body}</p>
+          <div className="d-flex">
+            <button className="btn btn-sm btn-transparent text-light">Edit</button>
+            <button className="btn btn-sm btn-transparent text-light">Delete</button>
+          </div>
+        </div>
+      ))}
     </div>
-  )
+  );
 }
 
 export default Comment

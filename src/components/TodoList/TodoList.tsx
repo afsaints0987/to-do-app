@@ -4,42 +4,75 @@ import * as FaIcons from "react-icons/fa";
 import http from "../../config/axios";
 import Comment from "../Comment";
 
-interface TodoListProps {
-  todos: Todo[];
-  handleShowComment: (id: number | undefined) => void;
-  handleDeleteTodo: (id: number | undefined) => void; 
-}
 
-const TodoList: React.FC<TodoListProps> = ({ todos, handleShowComment, handleDeleteTodo }) => {
+const TodoList: React.FC = () => {
   const [editTodoId, setEditTodoId] = React.useState<number | null>(null);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [editTodo, setEditTodos] = React.useState<Todo[]>([]);
+  const [editTodo, setEditTodo] = React.useState("");
   const [addComment, setAddComment] = React.useState({
-    comment_body:"",
+    body:"",
   })
+  const [todos, setTodos] = React.useState<Todo[]>([]);
 
+  let userData: { username: string };
+  const storedUser = localStorage.getItem("user");
+  if (storedUser) {
+    userData = JSON.parse(storedUser);
+  }
+
+  const getTodoList = async () => {
+    const getTodo = await http.get(`/tasks`);
+    const todoItems = getTodo.data;
+    const filteredTodos = todoItems.filter(
+      (todo: { author: string }) => todo.author === userData.username
+    );
+    setTodos(filteredTodos);
+  };
+
+  // Get TO-DO List
+
+  React.useEffect(() => {
+    getTodoList();
+
+    return () => {
+      setTodos([]);
+    };
+  }, []);
+
+  const handleRefresh = React.useCallback(() => {
+    getTodoList();
+  }, []);
 
   const handleUpdateTodo = async (id: number | undefined) => {
     const todoItem = await http.get(`/tasks/${id}`);
     setEditTodoId(todoItem.data.id);
   };
 
-  const handleEditTodoText = (id: number, text: string) => {
-    setEditTodos((prevTodos) =>
-      prevTodos.map((todo) => (todo.id === id ? { ...todo, text } : todo))
+  const handleDeleteTodo = async (id: number | undefined) => {
+    await http.delete(`/tasks/${id}`);
+    handleRefresh
+  };
+
+  // Render Comment
+
+  const handleShowComment = (id: number | undefined) => {
+    console.log(id)
+    setTodos((prevTodos) =>
+      prevTodos.map((todo) =>
+        todo.id === id ? { ...todo, showComment: !todo.showComment } : todo
+      )
     );
   };
 
-  const handleAddComment = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleAddComment = async (id: number | undefined, e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if(!addComment.comment_body){
+    if(!addComment.body){
       alert("Please enter a valid Comment");
     } else {
-      await http.post('/comments', addComment)
+      await http.post(`tasks/${id}/comments`, addComment)
 
       setAddComment({
-        comment_body: ""
+        body: ""
       })
     }
   }
@@ -59,10 +92,9 @@ const TodoList: React.FC<TodoListProps> = ({ todos, handleShowComment, handleDel
                 <div className="input-group py-0">
                   <input
                     type="text"
-                    value={todo.text}
-                    onChange={(e) =>
-                      handleEditTodoText(editTodoId, e.target.value)
-                    }
+                    name="text"
+                    value={editTodo}
+                    onChange={() => setEditTodo(todo.text)}
                     className="form-control"
                   />
                   <button className="btn btn-sm btn-success">
@@ -104,24 +136,24 @@ const TodoList: React.FC<TodoListProps> = ({ todos, handleShowComment, handleDel
               )}
             </div>
             {todo.showComment && (
-              <form className="d-flex flex-column mt-2" onSubmit={handleAddComment}>
+              <form className="d-flex flex-column mt-2" onSubmit={(e) => handleAddComment(todo.id, e)}>
                 <textarea
                   cols={3}
                   rows={2}
                   className="form-control"
                   placeholder="Comment..."
-                  value={addComment.comment_body}
-                  onChange={(e) => setAddComment({comment_body: e.target.value})}
+                  value={addComment.body}
+                  onChange={(e) => setAddComment({body: e.target.value})}
                 />
                 <div>
                   <button className="btn btn-transparent btn-sm" type="submit">Post</button>
                 </div>
               </form>
             )}
+            {todo.showComment && <Comment/>}
           </div>
         ))
       )}
-      <Comment/>
     </div>
   );
 };

@@ -30,20 +30,9 @@
   ],
   "comments": [
     {
-      "comment_body": "this is still on going",
+      "body": "This is working!",
+      "taskId": "579",
       "id": 1
-    },
-    {
-      "comment_body": "this is perfect!",
-      "id": 2
-    },
-    {
-      "comment_body": "Now this is working",
-      "id": 3
-    },
-    {
-      "comment_body": "Added additional functionalities",
-      "id": 4
     }
   ]
 }
