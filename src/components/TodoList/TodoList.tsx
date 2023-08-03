@@ -4,34 +4,24 @@ import * as FaIcons from "react-icons/fa";
 import http from "../../config/axios";
 
 interface TodoListProps {
-  todos: Todo[]; 
+  todos: Todo[];
+  handleShowComment: (id: number | undefined) => void;
+  handleDeleteTodo: (id: number | undefined) => void; 
 }
 
-const TodoList: React.FC<TodoListProps> = ({ todos }) => {
+const TodoList: React.FC<TodoListProps> = ({ todos, handleShowComment, handleDeleteTodo }) => {
   const [editTodoId, setEditTodoId] = React.useState<number | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [editTodo, setEditTodos] = React.useState<Todo[]>([]);
 
-  const handleDeleteTodo = (id: number | undefined) => {
-    if (id) {
-      http.delete(`/${id}`);
-    }
-  };
-
-  const handleShowComment = (id: number | undefined) => {
-    setTodos((prevTodos: { id: number | undefined; showComment: boolean; }[]) =>
-      prevTodos.map((todo: { id: number | undefined; showComment: boolean; }) =>
-        todo.id === id ? { ...todo, showComment: !todo.showComment } : todo
-      )
-    );
-  };
 
   const handleUpdateTodo = async (id: number | undefined) => {
-    const todoItem = await http.get(`/${id}`);
+    const todoItem = await http.get(`/tasks/${id}`);
     setEditTodoId(todoItem.data.id);
   };
 
   const handleEditTodoText = (id: number, text: string) => {
-    // Update the todo text using the ID
-    setTodos((prevTodos) =>
+    setEditTodos((prevTodos) =>
       prevTodos.map((todo) => (todo.id === id ? { ...todo, text } : todo))
     );
   };
@@ -53,7 +43,7 @@ const TodoList: React.FC<TodoListProps> = ({ todos }) => {
                     type="text"
                     value={todo.text}
                     onChange={(e) =>
-                      handleEditTodoText(todo.id, e.target.value)
+                      handleEditTodoText(editTodoId, e.target.value)
                     }
                     className="form-control"
                   />

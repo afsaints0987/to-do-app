@@ -1,20 +1,17 @@
 {
-<<<<<<< HEAD
-  "data": []
-=======
-  "data": [
+  "users": [
     {
       "id": 1,
-      "text": "Create a Todo list app"
-    },
+      "username": "johndoe",
+      "password": "test123",
+      "tasks": []
+    }
+  ],
+  "tasks": [
     {
-      "id": 48,
-      "text": "Adding Features"
-    },
-    {
-      "id": 72,
-      "text": "Separating the Component"
+      "id": 1,
+      "text": "Creating an App",
+      "comment": []
     }
   ]
->>>>>>> origin/added-features
 }

@@ -6,13 +6,13 @@ import TodoList from "../../components/TodoList/TodoList";
 const Dashboard: React.FC = () => {
   const [showTodo, setShowToDo] = React.useState(false);
   const [addTodo, setAddTodo] = React.useState<Todo>({
-    id: Math.floor(Math.random() * 100),
+    id: Math.floor(Math.random() * 1000),
     text: "",
   });
   const [todos, setTodos] = React.useState<Todo[]>([]);
 
   const getTodoList = async () => {
-    const getTodo = await http.get("/");
+    const getTodo = await http.get("/tasks");
     console.log(getTodo.data);
     setTodos(getTodo.data);
   };
@@ -32,6 +32,13 @@ const Dashboard: React.FC = () => {
   const handleShowTodo = () => {
     setShowToDo(!showTodo);
   };
+  const handleShowComment = (id: number | undefined) => {
+    setTodos((prevTodos) =>
+      prevTodos.map((todo) =>
+        todo.id === id ? { ...todo, showComment: !todo.showComment } : todo
+      )
+    );
+  };
 
   const handleTodoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -48,9 +55,14 @@ const Dashboard: React.FC = () => {
       alert("Please fill up the todo");
     } else {
       console.log(addTodo);
-      http.post("/", addTodo);
+      http.post("/tasks", addTodo);
     }
     setAddTodo({ text: "" });
+    handleRefresh();
+  };
+  
+  const handleDeleteTodo = (id: number | undefined) => {
+    http.delete(`tasks/${id}`);
     handleRefresh();
   };
 
@@ -81,7 +93,7 @@ const Dashboard: React.FC = () => {
           </button>
         </form>
       )}
-      <TodoList todos={todos} />
+      <TodoList todos={todos} handleShowComment={handleShowComment} handleDeleteTodo={handleDeleteTodo}/>
     </div>
   );
 };
