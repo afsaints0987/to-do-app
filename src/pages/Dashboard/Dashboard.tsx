@@ -1,43 +1,43 @@
 import * as React from "react";
-import * as FaIcons from "react-icons/fa";
 import { Todo } from "../../types/Todo";
-import http from "../../config/axios"
+import http from "../../config/axios";
+import TodoList from "../../components/TodoList/TodoList";
 
 const Dashboard: React.FC = () => {
   const [showTodo, setShowToDo] = React.useState(false);
   const [addTodo, setAddTodo] = React.useState<Todo>({
     id: Math.floor(Math.random() * 100),
-    text: ""
+    text: "",
   });
-  const [todos, setTodos] = React.useState<Todo[]>([])
+  const [todos, setTodos] = React.useState<Todo[]>([]);
 
-  const getTodoList = async() => {
-    const getTodo = await http.get('/')
+  const getTodoList = async () => {
+    const getTodo = await http.get("/");
     console.log(getTodo.data);
-    setTodos(getTodo.data)
-    }
+    setTodos(getTodo.data);
+  };
 
   React.useEffect(() => {
-    getTodoList()
+    getTodoList();
 
     return () => {
-        setTodos([])
-    }
-  },[])
+      setTodos([]);
+    };
+  }, []);
 
   const handleRefresh = React.useCallback(() => {
     getTodoList();
-  },[])
+  }, []);
 
   const handleShowTodo = () => {
     setShowToDo(!showTodo);
   };
 
   const handleTodoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
+    const { name, value } = e.target;
     setAddTodo({
       ...addTodo,
-      text: value,
+      [name]: value,
     });
   };
 
@@ -47,19 +47,12 @@ const Dashboard: React.FC = () => {
     if (!addTodo) {
       alert("Please fill up the todo");
     } else {
-        console.log(addTodo)
-        http.post('/', addTodo)
+      console.log(addTodo);
+      http.post("/", addTodo);
     }
-    setAddTodo({text: ""})
+    setAddTodo({ text: "" });
     handleRefresh();
   };
-
-  const handleDeleteTodo = (id: number) => {
-    if(id){
-        http.delete(`/${id}`)
-        handleRefresh();
-    }
-  }
 
   return (
     <div className="container">
@@ -76,7 +69,7 @@ const Dashboard: React.FC = () => {
               Add Todo
             </label>
             <input
-              name="task"
+              name="text"
               type="text"
               value={addTodo.text}
               className="form-control"
@@ -88,26 +81,7 @@ const Dashboard: React.FC = () => {
           </button>
         </form>
       )}
-      <div id="todo -list" className="mt-5">
-            {!todos ? <p>No Data</p> : todos.map(todo => (
-                <div key={todo.id}id="todo-item" className="bg-light d-flex justify-content-between px-3 py-2 rounded-3 mt-3">
-                    <div className="d-flex flex-column align-items-start">
-                        <p>{todo.text}</p>
-                        <button className="btn btn-sm btn-transparent text-primary">
-                        Comment
-                        </button>
-                    </div>
-                    <div>
-                        <button className="btn btn-sm btn-warning mx-2">
-                        <FaIcons.FaEdit />
-                        </button>
-                        <button className="btn btn-sm btn-secondary" onClick={() => handleDeleteTodo(todo.id)}>
-                        <FaIcons.FaTrash />
-                        </button>
-                    </div>
-                </div>
-            ))}
-      </div>
+      <TodoList todos={todos} />
     </div>
   );
 };
