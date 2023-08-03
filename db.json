@@ -21,7 +21,21 @@
       "id": 579,
       "text": "Creating a todo app ",
       "author": "janedoe"
+    },
+    {
+      "id": 793,
+      "text": "Testing for Comment Component",
+      "author": "janedoe"
     }
   ],
-  "comments": []
+  "comments": [
+    {
+      "comment_body": "this is still on going",
+      "id": 1
+    },
+    {
+      "comment_body": "this is perfect!",
+      "id": 2
+    }
+  ]
 }

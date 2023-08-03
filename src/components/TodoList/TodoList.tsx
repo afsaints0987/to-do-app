@@ -2,6 +2,7 @@ import React from "react";
 import { Todo } from "../../types/Todo";
 import * as FaIcons from "react-icons/fa";
 import http from "../../config/axios";
+import Comment from "../Comment";
 
 interface TodoListProps {
   todos: Todo[];
@@ -13,6 +14,9 @@ const TodoList: React.FC<TodoListProps> = ({ todos, handleShowComment, handleDel
   const [editTodoId, setEditTodoId] = React.useState<number | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [editTodo, setEditTodos] = React.useState<Todo[]>([]);
+  const [addComment, setAddComment] = React.useState({
+    comment_body:"",
+  })
 
 
   const handleUpdateTodo = async (id: number | undefined) => {
@@ -25,6 +29,20 @@ const TodoList: React.FC<TodoListProps> = ({ todos, handleShowComment, handleDel
       prevTodos.map((todo) => (todo.id === id ? { ...todo, text } : todo))
     );
   };
+
+  const handleAddComment = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if(!addComment.comment_body){
+      alert("Please enter a valid Comment");
+    } else {
+      await http.post('/comments', addComment)
+
+      setAddComment({
+        comment_body: ""
+      })
+    }
+  }
 
   return (
     <div id="todo-list" className="mt-5">
@@ -86,21 +104,24 @@ const TodoList: React.FC<TodoListProps> = ({ todos, handleShowComment, handleDel
               )}
             </div>
             {todo.showComment && (
-              <form className="d-flex flex-column mt-2">
+              <form className="d-flex flex-column mt-2" onSubmit={handleAddComment}>
                 <textarea
                   cols={3}
                   rows={2}
                   className="form-control"
                   placeholder="Comment..."
+                  value={addComment.comment_body}
+                  onChange={(e) => setAddComment({comment_body: e.target.value})}
                 />
                 <div>
-                  <button className="btn btn-transparent btn-sm">Post</button>
+                  <button className="btn btn-transparent btn-sm" type="submit">Post</button>
                 </div>
               </form>
             )}
           </div>
         ))
       )}
+      <Comment/>
     </div>
   );
 };

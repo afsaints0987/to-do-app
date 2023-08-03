@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Login from "./pages/Login/Login";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Register from "./pages/Register/Register";
@@ -34,7 +34,7 @@ const App: React.FC = () => {
       <Navigation/>
       <Routes>
         <Route path="/" element={<Login />}></Route>
-        <Route path="/dashboard" element={user ? <Dashboard/> : <Navigate to='/'/>}></Route>
+        <Route path="/dashboard" element={<Dashboard/>}></Route>
         <Route path="/register" element={<Register />}></Route>
       </Routes>
     </>
