@@ -3,15 +3,25 @@
     {
       "id": 1,
       "username": "johndoe",
-      "password": "test123",
-      "tasks": []
+      "password": "test1234"
+    },
+    {
+      "id": 30,
+      "username": "janedoe",
+      "password": "test1234"
     }
   ],
   "tasks": [
     {
       "id": 1,
-      "text": "Creating an App",
-      "comment": []
+      "text": "Creating the App",
+      "author": "johndoe"
+    },
+    {
+      "id": 579,
+      "text": "Creating a todo app ",
+      "author": "janedoe"
     }
-  ]
+  ],
+  "comments": []
 }

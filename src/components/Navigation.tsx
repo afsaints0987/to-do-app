@@ -5,6 +5,7 @@ const Navigation: React.FC = () => {
     const navigate = useNavigate();
 
     const handleLogout = () => {
+        localStorage.removeItem('user')
         navigate('/')
     }
 

@@ -22,6 +22,7 @@ const Register: React.FC = () => {
     e.preventDefault();
 
     const userData = {
+      id: registerUser.id,
       username: registerUser.username,
       password: registerUser.password
     }
@@ -30,16 +31,15 @@ const Register: React.FC = () => {
       alert('Please fill in all fields')
     } else {
       try {
-        const response = await http.post('/profile', userData)
-        if(response.status === 200){
-          console.log("Success");
-          alert('Registration Complete');
-          navigate('/')
-        } else {
-          alert('Registration Failed')
-        }
-      } catch (err){
-        console.log('Registration Error', err)
+        await http.post('/users', userData, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        alert('Registration Successful!')
+        navigate('/')
+      } catch (err) {
+        console.log(`Error registering user ${JSON.stringify(err)}`)
       }
     }
   }

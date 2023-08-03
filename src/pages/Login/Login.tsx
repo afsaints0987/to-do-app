@@ -31,20 +31,15 @@ const Login: React.FC = () => {
     if(!userData.username || !userData.password){
       alert("Please fill up the form");
     } else {
-      try {
-        const response = await http.get('/users');
-        const users = response.data[0];
-        console.log(users.username)
-
-        if(users.username === userData.username){
-          localStorage.setItem('users', JSON.stringify(users))
+      const response = await http.get('/users');
+      const users = response.data
+      users.map((user: { username: string }) => {
+        if(userData.username === user.username){
+          alert('Login Successful')
+          localStorage.setItem('user', JSON.stringify(userData))
           navigate('/dashboard')
-        } else {
-          alert('Invalid Credentials. Please try again')
         }
-      } catch {
-        alert('Login Error. Please try again later')
-      }
+      })
     }
   }
 

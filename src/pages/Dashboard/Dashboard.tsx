@@ -10,11 +10,18 @@ const Dashboard: React.FC = () => {
     text: "",
   });
   const [todos, setTodos] = React.useState<Todo[]>([]);
+  
+  let userData: { username: string; };
+  const storedUser = localStorage.getItem("user");
+  if (storedUser) {
+    userData = JSON.parse(storedUser);
+  }
 
   const getTodoList = async () => {
-    const getTodo = await http.get("/tasks");
-    console.log(getTodo.data);
-    setTodos(getTodo.data);
+    const getTodo = await http.get(`/tasks`);
+    const todoItems = getTodo.data;
+    const filteredTodos = todoItems.filter((todo: { author: string; }) => todo.author === userData.username);
+    setTodos(filteredTodos)
   };
 
   React.useEffect(() => {
@@ -45,25 +52,24 @@ const Dashboard: React.FC = () => {
     setAddTodo({
       ...addTodo,
       [name]: value,
+      author: userData.username
     });
   };
 
-  const handleSaveTodo = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSaveTodo = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!addTodo) {
       alert("Please fill up the todo");
     } else {
-      console.log(addTodo);
-      http.post("/tasks", addTodo);
+      await http.post('tasks', addTodo)
     }
     setAddTodo({ text: "" });
     handleRefresh();
   };
-  
+
   const handleDeleteTodo = (id: number | undefined) => {
-    http.delete(`tasks/${id}`);
-    handleRefresh();
+    console.log(id);
   };
 
   return (
@@ -93,7 +99,11 @@ const Dashboard: React.FC = () => {
           </button>
         </form>
       )}
-      <TodoList todos={todos} handleShowComment={handleShowComment} handleDeleteTodo={handleDeleteTodo}/>
+      <TodoList
+        todos={todos}
+        handleShowComment={handleShowComment}
+        handleDeleteTodo={handleDeleteTodo}
+      />
     </div>
   );
 };
