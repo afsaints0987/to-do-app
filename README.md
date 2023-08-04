@@ -47,4 +47,4 @@ Once both is running you can check the application by registering a user, you ca
 2. Comment box simultaneously filled up
 3. Existing Data is not showing upon clicking the Edit button for the Task and Comment
 
-Thank you very much for the opportunity! and hope for the best for your company!
+Thank you very much for the opportunity! and hope for the best to your company!
