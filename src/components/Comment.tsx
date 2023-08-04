@@ -16,7 +16,6 @@ const Comment: React.FC = () => {
         getComments();
     },[])
 
-    handleCommentRefresh();
 
   return (
     <div>
