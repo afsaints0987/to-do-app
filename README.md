@@ -1,27 +1,51 @@
-# React + TypeScript + Vite
+# DISCLAIMER
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+There's still some bugs on the application but still manage to perform the task. Unable to fix the necessary due to time constraint
 
-Currently, two official plugins are available:
+Create Frontend for a to-do application
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+  - multiple users to log in
 
-## Expanding the ESLint configuration
+  - add, update and remove to-do items
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+  - add, update and remove comments on to-do items
 
-- Configure the top-level `parserOptions` property like this:
+# STARTING THE APPLICATION
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
+Before you run the application make sure to do the following
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+Clone the Repository on your Local Machine
+
+<code>git clone</code> repository
+
+After cloning the repository on your Local Machine
+
+<code>cd</code> repository folder
+
+Install the Dependencies
+
+<code>npm install</code>
+
+Run the application
+
+<code>npm run dev</code>
+
+I'm using a json-server to handle the database for the application
+
+To start the server
+
+<code>npm run server</code>
+
+frontend is running on localhost:5173
+backend is running on localhost:5000
+
+Once both is running you can check the application by registering a user, you can also check the <code>db.json</code> to check users for login
+
+# BUGS THAT HAVEN'T FIXED
+
+1. Protected Route for Dashboard - Given it can login if you go to localhost:5173/dashboard it can still manage to go inside the component
+2. Comment box simultaneously filled up
+3. Edit Comment is not functional 
+4. Existing Data is not showing upon clicking the Edit button for the Task
+
+Thank you very much for the opportunity! and hope for the best for your company!
