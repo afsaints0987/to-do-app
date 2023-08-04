@@ -38,6 +38,8 @@ const TodoList: React.FC<TodoListProps> = ({
     if (todoItem.id === editTodoId) {
       await http.put(`tasks/${todoItem.id}`, { ...todoItem, text: editTodo });
       alert("Update Successful!");
+      setEditTodoId(0);
+      window.location.reload();
     }
   };
 
