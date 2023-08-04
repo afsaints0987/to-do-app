@@ -27,8 +27,6 @@ const App: React.FC = () => {
     }
   },[])
 
-  console.log(user)
-
   return (
     <>
       <Navigation/>
