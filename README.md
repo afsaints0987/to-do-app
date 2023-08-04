@@ -48,4 +48,4 @@ Once both is running you can check the application by registering a user, you ca
 3. Edit Comment is not functional 
 4. Existing Data is not showing upon clicking the Edit button for the Task
 
-Thank you very much for the opportunity! and hope for the best for your company!
+Thank you very much for the opportunity! and hope for the best to your company!
