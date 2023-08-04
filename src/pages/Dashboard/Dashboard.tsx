@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Todo } from "../../types/Todo";
 import http from "../../config/axios";
-import TodoList from "../../components/TodoList/TodoList";
+import TodoList from "../../components/TodoList";
 
 const Dashboard: React.FC = () => {
   const [showTodo, setShowToDo] = React.useState(false);
@@ -54,18 +54,16 @@ const Dashboard: React.FC = () => {
     );
   };
 
-
   const handleShowTodo = () => {
     setShowToDo(!showTodo);
   };
-
 
   const handleTodoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setAddTodo({
       ...addTodo,
       [name]: value,
-      author: userData.username
+      author: userData.username,
     });
   };
 
@@ -75,8 +73,8 @@ const Dashboard: React.FC = () => {
     if (!addTodo) {
       alert("Please fill up the todo");
     } else {
-      await http.post('tasks', addTodo)
-      alert("Task Added")
+      await http.post("tasks", addTodo);
+      alert("Task Added");
       setAddTodo({ ...addTodo, text: "" });
       handleRefresh();
     }
@@ -109,7 +107,11 @@ const Dashboard: React.FC = () => {
           </button>
         </form>
       )}
-      <TodoList todos={todos} handleDelete={handleDeleteTodo} handleShow={handleShowComment}/>
+      <TodoList
+        todos={todos}
+        handleDelete={handleDeleteTodo}
+        handleShow={handleShowComment}
+      />
     </div>
   );
 };

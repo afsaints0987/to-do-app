@@ -45,12 +45,12 @@
       "id": 1
     },
     {
-      "body": "This is working",
+      "body": "This is surely working!",
       "taskId": "500",
       "id": 2
     },
     {
-      "body": "Current testing",
+      "body": "This is for testing purposes",
       "taskId": "500",
       "id": 3
     }

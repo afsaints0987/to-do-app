@@ -8,9 +8,7 @@ interface CommentProps {
 
 const Comment: React.FC<CommentProps> = ({id}) => {
     const [comments, setComments] = React.useState([]);
-    const [editCommentItem, setEditCommentItem] = React.useState({
-      body: ""
-    })
+    const [editCommentItem, setEditCommentItem] = React.useState("")
     const [editCommentId, setEditCommentId] = React.useState<number | undefined>(0)
     const getComments = async () => {
         const commentItems = await http.get('comments');
@@ -35,11 +33,22 @@ const Comment: React.FC<CommentProps> = ({id}) => {
     }
 
     const handleEditCommentId = (id: number | undefined) => {
+      console.log(id)
       setEditCommentId(id)
     }
 
-    const handleUpdateComment = () => {
+    const handleUpdateComment = async (id: number | undefined) => {
+      const getCommentItem = await http.get(`/comments/${id}`)
+      const commentItem = getCommentItem.data
+
       console.log(editCommentItem)
+
+      if(commentItem.id === editCommentId){
+        await http.put(`/comments/${commentItem.id}`, {...commentItem, body: editCommentItem})
+        alert('Comment Updated')
+        setEditCommentId(0);
+        handleCommentRefresh();
+      }
     }
 
 
@@ -51,8 +60,8 @@ const Comment: React.FC<CommentProps> = ({id}) => {
           className="container px-3 py-2 mt-2 mx-2 bg-dark rounded-3 shadow-sm"
         > {editCommentId === comment.id ? <div className="input-group">
           <label htmlFor="comment"></label>
-          <textarea name="comment" cols={3} rows={2} className="form-control" onChange={(e) => setEditCommentItem({body: e.target.value})}/>
-          <button className="btn btn-sm btn-light" onClick={() => handleUpdateComment}><FaIcons.FaCheck/></button>
+          <textarea name="comment" cols={3} rows={2} className="form-control" onChange={(e) => setEditCommentItem(e.target.value)}/>
+          <button className="btn btn-sm btn-light" onClick={() => handleUpdateComment(comment.id)}><FaIcons.FaCheck/></button>
           <button className="btn btn-sm btn-danger" onClick={() => setEditCommentId(0)}><FaIcons.FaTimes/></button>
         </div> : <><p className="text-sm text-light">{comment.body}</p>
           <div className="d-flex">
