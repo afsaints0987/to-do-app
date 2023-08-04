@@ -18,32 +18,41 @@
       "author": "johndoe"
     },
     {
-      "id": 579,
-      "text": "Creating a todo app ",
+      "id": 500,
+      "text": "Testing the Update function",
       "author": "janedoe"
     },
     {
-      "id": 793,
-      "text": "Testing for Comment Component",
+      "id": 233,
+      "text": "Updating the alert message",
+      "author": "janedoe"
+    },
+    {
+      "id": 385,
+      "text": "Create Edit function for comment and task",
+      "author": "janedoe"
+    },
+    {
+      "id": 91,
+      "text": "Creating the app",
       "author": "janedoe"
     }
   ],
   "comments": [
     {
-      "comment_body": "this is still on going",
+      "body": "Deadline will be today",
+      "taskId": "579",
       "id": 1
     },
     {
-      "comment_body": "this is perfect!",
+      "body": "This is working",
+      "taskId": "500",
       "id": 2
     },
     {
-      "comment_body": "Now this is working",
+      "body": "Current testing",
+      "taskId": "500",
       "id": 3
-    },
-    {
-      "comment_body": "Added additional functionalities",
-      "id": 4
     }
   ]
 }

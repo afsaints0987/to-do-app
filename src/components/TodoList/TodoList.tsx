@@ -5,41 +5,48 @@ import http from "../../config/axios";
 import Comment from "../Comment";
 
 interface TodoListProps {
-  todos: Todo[];
-  handleShowComment: (id: number | undefined) => void;
-  handleDeleteTodo: (id: number | undefined) => void; 
+  todos: Todo[]
+  handleDelete: (id: number | undefined) => void;
+  handleShow: (id: number | undefined) => void;
 }
 
-const TodoList: React.FC<TodoListProps> = ({ todos, handleShowComment, handleDeleteTodo }) => {
-  const [editTodoId, setEditTodoId] = React.useState<number | null>(null);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [editTodo, setEditTodos] = React.useState<Todo[]>([]);
+const TodoList: React.FC<TodoListProps> = ({todos, handleDelete, handleShow}) => {
+  const [editTodoId, setEditTodoId] = React.useState<number | undefined>(0);
   const [addComment, setAddComment] = React.useState({
-    comment_body:"",
+    body:"",
   })
+  const [editTodo, setEditTodo] = React.useState("")
 
+  const handleEditTodo = (id: number | undefined) => {
+    console.log(id)
+    setEditTodoId(id);
+  }
+
+  const handleEditChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const {value} = e.target
+    setEditTodo(value)
+  }
 
   const handleUpdateTodo = async (id: number | undefined) => {
-    const todoItem = await http.get(`/tasks/${id}`);
-    setEditTodoId(todoItem.data.id);
-  };
+    const getTodoItem = await http.get(`tasks/${id}`)
+    const todoItem = getTodoItem.data
 
-  const handleEditTodoText = (id: number, text: string) => {
-    setEditTodos((prevTodos) =>
-      prevTodos.map((todo) => (todo.id === id ? { ...todo, text } : todo))
-    );
-  };
+    if(todoItem.id === editTodoId){
+      await http.put(`tasks/${todoItem.id}`, {...todoItem, text: editTodo})
+      alert('Update Successful!')
+    }
+  }
 
-  const handleAddComment = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleAddComment = async (id: number | undefined, e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if(!addComment.comment_body){
+    if(!addComment.body){
       alert("Please enter a valid Comment");
     } else {
-      await http.post('/comments', addComment)
+      await http.post(`tasks/${id}/comments`, addComment)
 
       setAddComment({
-        comment_body: ""
+        body: ""
       })
     }
   }
@@ -57,20 +64,20 @@ const TodoList: React.FC<TodoListProps> = ({ todos, handleShowComment, handleDel
             >
               {editTodoId === todo.id ? (
                 <div className="input-group py-0">
+                  <label htmlFor="text"></label>
                   <input
                     type="text"
-                    value={todo.text}
-                    onChange={(e) =>
-                      handleEditTodoText(editTodoId, e.target.value)
-                    }
+                    name="text"
+                    value={editTodo}
+                    onChange={handleEditChange}
                     className="form-control"
                   />
-                  <button className="btn btn-sm btn-success">
+                  <button className="btn btn-sm btn-success" onClick={() => handleUpdateTodo(todo.id)}>
                     <FaIcons.FaCheck />
                   </button>
                   <button
                     className="btn btn-sm btn-danger"
-                    onClick={() => setEditTodoId(null)}
+                    onClick={() => setEditTodoId(0)}
                   >
                     <FaIcons.FaTimes />
                   </button>
@@ -81,7 +88,7 @@ const TodoList: React.FC<TodoListProps> = ({ todos, handleShowComment, handleDel
                     <p>{todo.text}</p>
                     <button
                       className="btn btn-sm btn-transparent text-primary"
-                      onClick={() => handleShowComment(todo.id)}
+                      onClick={() => handleShow(todo.id)}
                     >
                       Comment
                     </button>
@@ -89,13 +96,13 @@ const TodoList: React.FC<TodoListProps> = ({ todos, handleShowComment, handleDel
                   <div>
                     <button
                       className="btn btn-sm btn-warning mx-2"
-                      onClick={() => handleUpdateTodo(todo.id)}
+                      onClick={() => handleEditTodo(todo.id)}
                     >
                       <FaIcons.FaEdit />
                     </button>
                     <button
                       className="btn btn-sm btn-secondary"
-                      onClick={() => handleDeleteTodo(todo.id)}
+                      onClick={() => handleDelete(todo.id)}
                     >
                       <FaIcons.FaTrash />
                     </button>
@@ -104,24 +111,26 @@ const TodoList: React.FC<TodoListProps> = ({ todos, handleShowComment, handleDel
               )}
             </div>
             {todo.showComment && (
-              <form className="d-flex flex-column mt-2" onSubmit={handleAddComment}>
+              <>
+              <form className="d-flex flex-column mt-2" onSubmit={(e) => handleAddComment(todo.id, e)}>
                 <textarea
                   cols={3}
                   rows={2}
                   className="form-control"
                   placeholder="Comment..."
-                  value={addComment.comment_body}
-                  onChange={(e) => setAddComment({comment_body: e.target.value})}
+                  value={addComment.body}
+                  onChange={(e) => setAddComment({body: e.target.value})}
                 />
                 <div>
                   <button className="btn btn-transparent btn-sm" type="submit">Post</button>
                 </div>
               </form>
+            <Comment id={todo.id}/>
+              </>
             )}
           </div>
         ))
       )}
-      <Comment/>
     </div>
   );
 };

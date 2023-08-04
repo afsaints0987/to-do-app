@@ -10,8 +10,7 @@ const Dashboard: React.FC = () => {
     text: "",
   });
   const [todos, setTodos] = React.useState<Todo[]>([]);
-  
-  let userData: { username: string; };
+  let userData: { username: string };
   const storedUser = localStorage.getItem("user");
   if (storedUser) {
     userData = JSON.parse(storedUser);
@@ -20,9 +19,13 @@ const Dashboard: React.FC = () => {
   const getTodoList = async () => {
     const getTodo = await http.get(`/tasks`);
     const todoItems = getTodo.data;
-    const filteredTodos = todoItems.filter((todo: { author: string; }) => todo.author === userData.username);
-    setTodos(filteredTodos)
+    const filteredTodos = todoItems.filter(
+      (todo: { author: string }) => todo.author === userData.username
+    );
+    setTodos(filteredTodos);
   };
+
+  // Get TO-DO List
 
   React.useEffect(() => {
     getTodoList();
@@ -36,9 +39,13 @@ const Dashboard: React.FC = () => {
     getTodoList();
   }, []);
 
-  const handleShowTodo = () => {
-    setShowToDo(!showTodo);
+  const handleDeleteTodo = async (id: number | undefined) => {
+    await http.delete(`/tasks/${id}`);
+    handleRefresh();
   };
+
+  // Render Comment
+
   const handleShowComment = (id: number | undefined) => {
     setTodos((prevTodos) =>
       prevTodos.map((todo) =>
@@ -46,6 +53,12 @@ const Dashboard: React.FC = () => {
       )
     );
   };
+
+
+  const handleShowTodo = () => {
+    setShowToDo(!showTodo);
+  };
+
 
   const handleTodoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -63,13 +76,10 @@ const Dashboard: React.FC = () => {
       alert("Please fill up the todo");
     } else {
       await http.post('tasks', addTodo)
+      alert("Task Added")
+      setAddTodo({ ...addTodo, text: "" });
+      handleRefresh();
     }
-    setAddTodo({ text: "" });
-    handleRefresh();
-  };
-
-  const handleDeleteTodo = (id: number | undefined) => {
-    console.log(id);
   };
 
   return (
@@ -99,11 +109,7 @@ const Dashboard: React.FC = () => {
           </button>
         </form>
       )}
-      <TodoList
-        todos={todos}
-        handleShowComment={handleShowComment}
-        handleDeleteTodo={handleDeleteTodo}
-      />
+      <TodoList todos={todos} handleDelete={handleDeleteTodo} handleShow={handleShowComment}/>
     </div>
   );
 };
