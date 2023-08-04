@@ -36,8 +36,8 @@ To start the server
 
 <code>npm run server</code>
 
-frontend is running on localhost:5173
-backend is running on localhost:5000
+* frontend is running on http://localhost:5173
+* backend is running on http://localhost:5000
 
 Once both is running you can check the application by registering a user, you can also check the <code>db.json</code> to check users for login
 
